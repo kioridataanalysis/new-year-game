@@ -1,0 +1,1867 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Кто украл твой Новый год? - создано по данным Кинопоиска</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;0,900;1,500&family=Montserrat:wght@300;400;500;600;700&family=Press+Start+2P&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-deep:#3a0a14;
+    --bg-dark:#2a0610;
+    --cream:#f5ecd7;
+    --milk:#faf3e0;
+    --gold:#d4a84b;
+    --gold-bright:#e8c36b;
+    --red:#a83232;
+    --red-bright:#c94545;
+    --green:#1f3a2a;
+    --green-light:#2d5239;
+    --shadow:0 10px 40px rgba(0,0,0,.45);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{
+    font-family:'Montserrat',system-ui,sans-serif;
+    background:var(--bg-deep);
+    color:var(--cream);
+    overflow-x:hidden;
+    min-height:100vh;
+    position:relative;
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+    /* Предотвращение выделения текста на мобильных */
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
+  body::before{
+    content:"";
+    position:fixed;inset:0;
+    background:
+      radial-gradient(ellipse at top, rgba(212,168,75,.08), transparent 60%),
+      radial-gradient(ellipse at bottom, rgba(168,50,50,.12), transparent 60%);
+    pointer-events:none;
+    z-index:0;
+  }
+  .snow{position:fixed;inset:0;pointer-events:none;z-index:1;overflow:hidden}
+  .snow span{
+    position:absolute;top:-10px;color:var(--cream);opacity:.5;
+    font-size:14px;
+    animation: fall linear infinite;
+    text-shadow:0 0 6px rgba(255,255,255,.4);
+  }
+  @keyframes fall{
+    0%{transform:translateY(-10vh) translateX(0) rotate(0)}
+    100%{transform:translateY(110vh) translateX(40px) rotate(360deg)}
+  }
+  .app{
+    position:relative;z-index:2;
+    min-height:100vh;
+    display:flex;align-items:center;justify-content:center;
+    padding:24px 16px;
+  }
+  .screen{display:none;width:100%;max-width:900px;animation:fadeIn .7s ease both}
+  .screen.active{display:block}
+  @keyframes fadeIn{
+    from{opacity:0;transform:translateY(16px)}
+    to{opacity:1;transform:translateY(0)}
+  }
+  h1,h2,h3{font-family:'Playfair Display',serif;font-weight:700;letter-spacing:.5px}
+  .mono{font-family:'JetBrains Mono',monospace;letter-spacing:.5px}
+  .pixel-font{font-family:'Press Start 2P',monospace;letter-spacing:1px}
+
+  .hero{text-align:center;padding:40px 20px;position:relative}
+  .hero__badge{
+    display:inline-block;
+    font-family:'JetBrains Mono',monospace;
+    font-size:11px;letter-spacing:3px;text-transform:uppercase;
+    color:var(--gold);border:1px solid var(--gold);
+    padding:8px 18px;border-radius:999px;
+    margin-bottom:28px;background:rgba(212,168,75,.06);
+    animation:fadeIn 1s .2s both;
+  }
+  .hero__title{
+    font-size:clamp(38px,7vw,76px);
+    line-height:1.05;color:var(--milk);
+    margin-bottom:18px;
+    text-shadow:0 4px 30px rgba(0,0,0,.5);
+    animation:fadeIn 1s .4s both;
+  }
+  .hero__title em{font-style:italic;color:var(--gold-bright);font-weight:500}
+  .hero__sub{
+    font-size:clamp(15px,2vw,19px);
+    color:var(--cream);opacity:.85;
+    max-width:560px;margin:0 auto 36px;
+    animation:fadeIn 1s .6s both;
+  }
+  .hero__meta{
+    display:flex;gap:24px;justify-content:center;flex-wrap:wrap;
+    margin-bottom:36px;animation:fadeIn 1s .8s both;
+  }
+  .hero__meta div{
+    font-family:'JetBrains Mono',monospace;
+    font-size:12px;color:var(--gold);
+    text-transform:uppercase;letter-spacing:2px;
+  }
+  .hero__meta div::before{content:"◆ ";color:var(--red-bright)}
+
+  .btn{
+    display:inline-flex;align-items:center;justify-content:center;gap:10px;
+    font-family:'Montserrat',sans-serif;
+    font-weight:600;font-size:15px;letter-spacing:.5px;
+    padding:16px 34px;border:none;cursor:pointer;
+    border-radius:4px;transition:all .25s ease;
+    text-decoration:none;position:relative;overflow:hidden;
+  }
+  .btn-primary{
+    background:linear-gradient(180deg,var(--gold-bright),var(--gold));
+    color:var(--bg-dark);
+    box-shadow:0 6px 20px rgba(212,168,75,.35), inset 0 1px 0 rgba(255,255,255,.3);
+  }
+  .btn-primary:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(212,168,75,.5)}
+  .btn-ghost{background:transparent;color:var(--cream);border:1px solid var(--cream)}
+  .btn-ghost:hover{background:rgba(245,236,215,.08)}
+  .btn-ghost:disabled{opacity:.5;cursor:default}
+  .btn-red{
+    background:linear-gradient(180deg,var(--red-bright),var(--red));
+    color:var(--milk);box-shadow:0 6px 20px rgba(168,50,50,.4);
+  }
+  .btn-red:hover{transform:translateY(-2px)}
+
+  .dossier{
+    background:linear-gradient(180deg,var(--milk) 0%,#e8dcc0 100%);
+    color:var(--bg-dark);padding:40px 36px;border-radius:6px;
+    box-shadow:var(--shadow);position:relative;border:1px solid var(--gold);
+  }
+  .dossier::before{
+    content:"СЕКРЕТНО";position:absolute;top:20px;right:-18px;
+    background:var(--red);color:var(--milk);
+    font-family:'JetBrains Mono',monospace;
+    font-size:11px;letter-spacing:3px;
+    padding:6px 28px;transform:rotate(8deg);
+    box-shadow:0 2px 10px rgba(0,0,0,.3);
+  }
+  .dossier__stamp{
+    position:absolute;bottom:30px;right:30px;
+    width:80px;height:80px;
+    border:3px double var(--red);border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    font-family:'Playfair Display',serif;font-weight:900;
+    color:var(--red);font-size:11px;text-align:center;
+    transform:rotate(-15deg);opacity:.7;line-height:1.1;
+  }
+  .dossier h2{font-size:32px;color:var(--bg-dark);margin-bottom:16px}
+  .dossier__label{
+    font-family:'JetBrains Mono',monospace;
+    font-size:11px;letter-spacing:2px;text-transform:uppercase;
+    color:var(--red);margin-bottom:8px;
+  }
+  .dossier p{font-size:15px;margin-bottom:14px;color:#3a1f10}
+  .dossier__rules{margin-top:24px;padding-top:24px;border-top:1px dashed var(--gold)}
+  .dossier__rules ul{list-style:none}
+  .dossier__rules li{
+    padding:10px 0 10px 32px;position:relative;
+    font-size:14px;color:#3a1f10;
+    border-bottom:1px dotted rgba(74,20,32,.15);
+  }
+  .dossier__rules li::before{content:"❯";position:absolute;left:8px;top:10px;color:var(--red);font-weight:700}
+  .dossier__footer{margin-top:28px;text-align:center}
+
+  .game-wrap{display:flex;flex-direction:column;align-items:center;gap:16px}
+  .game-hud{
+    width:100%;max-width:720px;
+    display:flex;align-items:center;justify-content:space-between;
+    padding:12px 20px;
+    background:rgba(0,0,0,.4);
+    border:1px solid rgba(212,168,75,.3);
+    border-radius:4px;
+    font-family:'JetBrains Mono',monospace;
+    font-size:12px;color:var(--gold);
+    letter-spacing:1px;text-transform:uppercase;
+    gap:12px;flex-wrap:wrap;
+  }
+  .game-hud__score{color:var(--cream)}
+  .inventory{display:flex;gap:6px;align-items:center}
+  .inv-slot{
+    width:28px;height:28px;
+    background:rgba(245,236,215,.08);
+    border:1px solid rgba(212,168,75,.3);
+    border-radius:3px;
+    display:flex;align-items:center;justify-content:center;
+    font-size:14px;
+    transition:all .3s ease;
+  }
+  .inv-slot.filled{
+    background:rgba(212,168,75,.2);
+    border-color:var(--gold-bright);
+    box-shadow:0 0 10px rgba(212,168,75,.3);
+    animation:pop .4s ease;
+  }
+  .inv-slot.failed{
+    background:rgba(168,50,50,.15);
+    border-color:var(--red);
+    opacity:.5;
+  }
+  .inv-slot.failed::after{
+    content:"✕";
+    color:var(--red-bright);
+    font-size:14px;
+    font-weight:700;
+  }
+  @keyframes pop{
+    0%{transform:scale(.5);opacity:0}
+    60%{transform:scale(1.2)}
+    100%{transform:scale(1);opacity:1}
+  }
+
+  .game-canvas-wrap{
+    position:relative;
+    width:100%;max-width:720px;
+    aspect-ratio:3/2;
+    background:#0a0205;
+    border:3px solid var(--gold);
+    border-radius:6px;
+    box-shadow:0 0 0 2px var(--bg-dark), 0 10px 40px rgba(0,0,0,.6), inset 0 0 60px rgba(0,0,0,.5);
+    overflow:hidden;
+    image-rendering:pixelated;
+    image-rendering:crisp-edges;
+    /* Центрирование канваса внутри контейнера */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  #gameCanvas{
+    /* Канвас будет масштабироваться JS-ом, но CSS тоже помогает */
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    display:block;
+    image-rendering:pixelated;
+    image-rendering:crisp-edges;
+  }
+  .game-hint{
+    position:absolute;bottom:10px;left:50%;
+    transform:translateX(-50%);
+    font-family:'Press Start 2P',monospace;
+    font-size:9px;color:var(--gold-bright);
+    background:rgba(0,0,0,.7);
+    padding:6px 12px;border-radius:3px;
+    border:1px solid var(--gold);
+    pointer-events:none;
+    text-align:center;
+    white-space:nowrap;
+    animation:blink 1.5s infinite;
+  }
+  @keyframes blink{
+    0%,100%{opacity:1}
+    50%{opacity:.5}
+  }
+
+  /* Адаптация контроллеров для мобильных */
+  .touch-controls{
+    display:none; /* Скрыто на десктопе по умолчанию */
+    width:100%;max-width:720px;
+    justify-content:space-between;
+    align-items:center;
+    margin-top:8px;
+    padding: 0 10px;
+  }
+  .dpad{
+    display:grid;
+    grid-template-columns:repeat(3,56px); /* Чуть больше для пальцев */
+    grid-template-rows:repeat(3,56px);
+    gap:4px;
+  }
+  .dpad button{
+    background:rgba(212,168,75,.15);
+    border:1px solid var(--gold);
+    color:var(--gold-bright);
+    font-size:20px;
+    border-radius:8px;
+    cursor:pointer;
+    user-select:none;
+    -webkit-tap-highlight-color:transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .dpad button:active{background:rgba(212,168,75,.4)}
+  .dpad .empty{visibility:hidden;background:transparent;border:none}
+  .action-btn{
+    width:90px;height:90px;
+    background:linear-gradient(180deg,var(--red-bright),var(--red));
+    border:2px solid var(--gold);
+    border-radius:50%;
+    color:var(--milk);
+    font-family:'Press Start 2P',monospace;
+    font-size:11px;
+    cursor:pointer;
+    box-shadow:0 4px 14px rgba(168,50,50,.5);
+    user-select:none;
+    -webkit-tap-highlight-color:transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    line-height: 1.1;
+  }
+  .action-btn:active{transform:scale(.95)}
+  
+  /* Показываем контроллеры только на тач-устройствах или маленьких экранах */
+  @media (hover:none) and (pointer:coarse){
+    .touch-controls{display:flex}
+  }
+  @media (max-width: 768px) {
+     .touch-controls { display: flex; }
+  }
+
+  .modal-overlay{
+    position:fixed;inset:0;
+    background:rgba(10,2,5,.85);
+    backdrop-filter:blur(6px);
+    z-index:50;
+    display:none;
+    align-items:center;justify-content:center;
+    padding:20px;
+    animation:fadeIn .3s ease;
+  }
+  .modal-overlay.active{display:flex}
+  .modal{
+    background:linear-gradient(180deg,rgba(77,20,32,.95),rgba(42,6,16,.98));
+    border:2px solid var(--gold);
+    border-radius:8px;
+    padding:28px 26px;
+    max-width:640px;width:100%;
+    max-height:90vh;overflow-y:auto;
+    box-shadow:0 0 60px rgba(212,168,75,.2);
+    position:relative;
+    animation:modalIn .4s ease;
+  }
+  @keyframes modalIn{
+    from{opacity:0;transform:scale(.9) translateY(20px)}
+    to{opacity:1;transform:scale(1) translateY(0)}
+  }
+  .modal__toy{
+    position:absolute;top:-28px;left:50%;
+    transform:translateX(-50%);
+    width:56px;height:56px;
+    background:var(--bg-dark);
+    border:2px solid var(--gold);
+    border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    font-size:28px;
+    box-shadow:0 4px 20px rgba(212,168,75,.4);
+  }
+  .modal__header{text-align:center;margin:18px 0 16px}
+  .modal__tag{
+    font-family:'Press Start 2P',monospace;
+    font-size:9px;letter-spacing:1px;
+    color:var(--gold);text-transform:uppercase;
+    margin-bottom:8px;
+  }
+  .modal__title{
+    font-family:'Playfair Display',serif;
+    font-size:24px;color:var(--milk);
+    line-height:1.2;margin-bottom:8px;
+  }
+  .modal__desc{font-size:14px;color:var(--cream);opacity:.85;margin-bottom:20px}
+  .options{display:flex;flex-direction:column;gap:10px;margin-bottom:16px}
+  .option{
+    display:flex;align-items:center;gap:12px;
+    padding:14px 18px;
+    background:rgba(245,236,215,.05);
+    border:1px solid rgba(245,236,215,.15);
+    border-radius:4px;cursor:pointer;
+    transition:all .2s ease;
+    color:var(--cream);font-size:14px;text-align:left;
+    font-family:inherit;width:100%;
+  }
+  .option:hover:not(:disabled){
+    background:rgba(212,168,75,.12);
+    border-color:var(--gold);
+    transform:translateX(4px);
+  }
+  .option__letter{
+    font-family:'Playfair Display',serif;
+    font-weight:700;font-size:16px;
+    color:var(--gold);min-width:24px;
+  }
+  .option.correct{background:rgba(45,82,57,.4);border-color:var(--green-light);color:var(--milk)}
+  .option.wrong{background:rgba(168,50,50,.3);border-color:var(--red-bright);opacity:.7}
+  .option:disabled{cursor:default}
+
+  .clue-card{
+    background:linear-gradient(135deg,var(--milk),#e8dcc0);
+    color:var(--bg-dark);padding:20px;border-radius:6px;
+    margin-bottom:16px;border:1px solid var(--gold);
+    position:relative;
+  }
+  .clue-card::after{
+    content:"УЛИКА";position:absolute;top:8px;right:12px;
+    font-family:'JetBrains Mono',monospace;
+    font-size:9px;letter-spacing:2px;color:var(--red);
+  }
+  .clue-card__row{
+    display:flex;justify-content:space-between;
+    padding:6px 0;border-bottom:1px dotted rgba(74,20,32,.25);
+    font-size:13px;
+  }
+  .clue-card__row:last-child{border-bottom:none}
+  .clue-card__row span:first-child{
+    font-family:'JetBrains Mono',monospace;
+    font-size:10px;letter-spacing:1px;text-transform:uppercase;
+    color:var(--red);
+  }
+  .clue-card__row span:last-child{font-weight:600;color:var(--bg-dark)}
+
+  .battle{
+    display:grid;grid-template-columns:1fr auto 1fr;
+    gap:12px;align-items:stretch;margin-bottom:16px;
+  }
+  .battle__card{
+    background:rgba(0,0,0,.3);
+    border:1px solid rgba(245,236,215,.15);
+    border-radius:6px;padding:14px;cursor:pointer;
+    transition:all .25s ease;text-align:center;
+    display:flex;flex-direction:column;align-items:center;gap:8px;
+  }
+  .battle__card:hover:not(.disabled){border-color:var(--gold);background:rgba(212,168,75,.1);transform:translateY(-3px)}
+  .battle__card.correct{border-color:var(--green-light);background:rgba(45,82,57,.35)}
+  .battle__card.wrong{border-color:var(--red);background:rgba(168,50,50,.25);opacity:.7}
+  .battle__name{font-family:'Playfair Display',serif;font-size:14px;color:var(--milk);line-height:1.2}
+  .battle__year{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--gold)}
+  .battle__vs{
+    display:flex;align-items:center;justify-content:center;
+    font-family:'Playfair Display',serif;font-style:italic;
+    font-size:24px;color:var(--gold);
+  }
+
+  .timeline{display:flex;flex-direction:column;gap:8px;margin-bottom:14px}
+  .timeline__item{
+    display:flex;align-items:center;gap:10px;
+    padding:10px 14px;
+    background:rgba(245,236,215,.05);
+    border:1px solid rgba(245,236,215,.15);
+    border-radius:4px;cursor:grab;
+    transition:all .2s ease;user-select:none;
+  }
+  .timeline__item:hover{background:rgba(212,168,75,.1);border-color:var(--gold)}
+  .timeline__item.dragging{opacity:.5}
+  .timeline__grip{color:var(--gold);font-size:16px;cursor:grab}
+  .timeline__name{flex:1;font-size:14px}
+  .timeline__year-hidden{
+    font-family:'JetBrains Mono',monospace;font-size:10px;
+    color:var(--gold);background:rgba(0,0,0,.3);
+    padding:3px 8px;border-radius:3px;letter-spacing:1px;
+  }
+  .timeline__item.correct-pos{background:rgba(45,82,57,.3);border-color:var(--green-light)}
+  .timeline__item.wrong-pos{background:rgba(168,50,50,.2);border-color:var(--red)}
+
+  .explain{
+    margin-top:16px;padding:14px 18px;
+    background:rgba(0,0,0,.35);
+    border-left:3px solid var(--gold);
+    border-radius:0 4px 4px 0;
+    font-size:13px;color:var(--cream);
+    animation:fadeIn .4s ease;
+  }
+  .explain strong{color:var(--gold-bright)}
+  .explain.fail{border-left-color:var(--red-bright)}
+  .explain.fail strong{color:var(--red-bright)}
+
+  .modal__next{margin-top:16px;display:flex;justify-content:flex-end}
+
+  .final{text-align:center;padding:20px 10px}
+  .final__badge{
+    display:inline-block;
+    font-family:'JetBrains Mono',monospace;
+    font-size:11px;letter-spacing:3px;text-transform:uppercase;
+    color:var(--gold);border:1px solid var(--gold);
+    padding:8px 18px;border-radius:999px;
+    margin-bottom:24px;background:rgba(212,168,75,.06);
+  }
+  .final__title{
+    font-size:clamp(28px,5vw,48px);
+    color:var(--milk);margin-bottom:16px;line-height:1.1;
+  }
+  .final__title em{color:var(--gold-bright);font-style:italic}
+  .final__desc{
+    font-size:16px;color:var(--cream);opacity:.85;
+    max-width:560px;margin:0 auto 32px;
+  }
+  .result-card{
+    background:linear-gradient(135deg,var(--milk) 0%,#e8dcc0 100%);
+    color:var(--bg-dark);padding:36px 30px;border-radius:8px;
+    box-shadow:var(--shadow);max-width:520px;margin:0 auto 32px;
+    position:relative;border:2px solid var(--gold);text-align:left;
+  }
+  .result-card::before{
+    content:"";position:absolute;inset:8px;
+    border:1px solid var(--gold);border-radius:4px;
+    pointer-events:none;opacity:.5;
+  }
+  .result-card__header{
+    display:flex;align-items:center;gap:16px;
+    padding-bottom:18px;border-bottom:1px dashed var(--gold);
+    margin-bottom:18px;
+  }
+  .result-card__icon{
+    width:70px;height:70px;background:var(--bg-dark);
+    border-radius:50%;display:flex;align-items:center;justify-content:center;
+    font-size:34px;box-shadow:0 4px 14px rgba(0,0,0,.3);
+    border:2px solid var(--gold);flex-shrink:0;
+  }
+  .result-card__rank{
+    font-family:'Playfair Display',serif;
+    font-size:22px;font-weight:700;color:var(--bg-dark);line-height:1.2;
+  }
+  .result-card__rank small{
+    display:block;font-family:'JetBrains Mono',monospace;
+    font-size:10px;letter-spacing:2px;text-transform:uppercase;
+    color:var(--red);margin-top:4px;font-weight:500;
+  }
+  .result-card__text{font-size:14px;color:#3a1f10;margin-bottom:18px;line-height:1.6}
+  .result-card__toys{
+    display:flex;gap:8px;justify-content:center;
+    padding:14px 0;
+    border-top:1px dashed var(--gold);
+    border-bottom:1px dashed var(--gold);
+    margin-bottom:18px;
+    flex-wrap:wrap;
+  }
+  .result-card__toy{
+    width:36px;height:36px;
+    background:rgba(212,168,75,.1);
+    border:1px solid var(--gold);
+    border-radius:4px;
+    display:flex;align-items:center;justify-content:center;
+    font-size:18px;
+  }
+  .result-card__toy.lost{
+    background:rgba(168,50,50,.1);
+    border-color:var(--red);
+    opacity:.5;
+  }
+  .result-card__toy.lost::after{
+    content:"✕";color:var(--red);font-size:16px;font-weight:700;
+  }
+  .result-card__stats{
+    display:grid;grid-template-columns:1fr 1fr;gap:12px;
+  }
+  .result-card__stat{text-align:center}
+  .result-card__stat-num{
+    font-family:'Playfair Display',serif;
+    font-size:32px;font-weight:700;color:var(--red);line-height:1;
+  }
+  .result-card__stat-label{
+    font-family:'JetBrains Mono',monospace;
+    font-size:10px;letter-spacing:1px;text-transform:uppercase;
+    color:var(--bg-dark);opacity:.7;margin-top:4px;
+  }
+  .result-card__footer{
+    margin-top:18px;text-align:center;
+    font-family:'JetBrains Mono',monospace;
+    font-size:10px;letter-spacing:2px;
+    color:var(--bg-dark);opacity:.5;text-transform:uppercase;
+  }
+  .final__actions{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+
+  .toast{
+    position:fixed;bottom:30px;left:50%;
+    transform:translateX(-50%) translateY(100px);
+    background:var(--bg-dark);color:var(--milk);
+    padding:14px 24px;border:1px solid var(--gold);
+    border-radius:4px;font-size:14px;
+    box-shadow:var(--shadow);z-index:100;
+    transition:transform .3s ease;
+  }
+  .toast.show{transform:translateX(-50%) translateY(0)}
+
+  @media (max-width:640px){
+    .app{padding:16px 10px}
+    .dossier{padding:30px 22px}
+    .dossier::before{right:-14px;font-size:10px;padding:5px 20px}
+    .dossier__stamp{width:60px;height:60px;font-size:9px;bottom:20px;right:20px}
+    .modal{padding:22px 18px}
+    .modal__title{font-size:20px}
+    .battle{grid-template-columns:1fr;gap:8px}
+    .battle__vs{padding:4px 0}
+    .result-card{padding:28px 20px}
+    .result-card__icon{width:56px;height:56px;font-size:28px}
+    .result-card__rank{font-size:18px}
+    .hero__meta{gap:14px}
+    .game-hud{font-size:10px;padding:10px 14px}
+    .inv-slot{width:24px;height:24px;font-size:12px}
+  }
+</style>
+</head>
+<body>
+
+<div class="snow" id="snow"></div>
+
+<div class="app">
+
+  <section class="screen active" id="screen-start">
+    <div class="hero">
+      <div class="hero__badge">Создано по данным Кинопоиска · 2026</div>
+      <h1 class="hero__title">Кто украл<br>твой <em>Новый год?</em></h1>
+      <p class="hero__sub">50 фильмов. 1 загадка. И только ты можешь спасти праздник. Стань детективом, пройди по заводу Деда Мороза и верни украденные игрушки.</p>
+      <div class="hero__meta">
+        <div>6 игрушек</div>
+        <div>50 улик</div>
+        <div>1 детектив — ты</div>
+      </div>
+      <button class="btn btn-primary" onclick="go('intro')">Начать расследование →</button>
+    </div>
+  </section>
+
+  <section class="screen" id="screen-intro">
+    <div class="dossier">
+      <div class="dossier__label">Дело № 12-31</div>
+      <h2>Новый год исчез.</h2>
+      <p>Ровно в полночь на фабрике Деда Мороза погас свет. Кто-то украл шесть волшебных игрушек — без них праздник не наступит. Ёлки погасли, снег перестал падать, а зрители по всей стране не могут вспомнить, какой же фильм они смотрели каждый год.</p>
+      <p>Тебе предстоит пройти по цехам фабрики, найти все игрушки и решить загадки, которые в них спрятаны. <strong>Внимание:</strong> ошибёшься — игрушка останется у вора. Только собрав нужные игрушки, ты узнаешь, кто ты на самом деле.</p>
+
+      <div class="dossier__rules">
+        <div class="dossier__label">Инструктаж для детектива</div>
+        <ul>
+          <li><strong>Управление:</strong> стрелки/WASD или экранные кнопки, действие — пробел/E или кнопка «ДЕЙСТВИЕ».</li>
+          <li>Найди <strong>6 игрушек</strong> в цехах фабрики — каждая хранит загадку.</li>
+          <li><strong>Право на ошибку одно.</strong> Не угадал — игрушка потеряна навсегда.</li>
+          <li>Собери все, что сможешь, и отнеси <strong>Деду Морозу</strong> — он скажет, кто ты.</li>
+        </ul>
+      </div>
+
+      <div class="dossier__stamp">Дело<br>открыто</div>
+
+      <div class="dossier__footer">
+        <button class="btn btn-red" onclick="startGame()">Войти на фабрику</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="screen" id="screen-game">
+    <div class="game-wrap">
+      <div class="game-hud">
+        <div>Фабрика Деда Мороза</div>
+        <div class="inventory" id="inventory">
+          <div class="inv-slot" data-idx="0"></div>
+          <div class="inv-slot" data-idx="1"></div>
+          <div class="inv-slot" data-idx="2"></div>
+          <div class="inv-slot" data-idx="3"></div>
+          <div class="inv-slot" data-idx="4"></div>
+          <div class="inv-slot" data-idx="5"></div>
+        </div>
+        <div class="game-hud__score" id="score-display">0 баллов</div>
+      </div>
+
+      <div class="game-canvas-wrap">
+        <!-- Убраны жесткие width/height, они задаются JS для сохранения пропорций -->
+        <canvas id="gameCanvas" width="480" height="320"></canvas>
+        <div class="game-hint" id="game-hint">← → ↑ ↓ — ходить · SPACE — действие</div>
+      </div>
+
+      <div class="touch-controls">
+        <div class="dpad">
+          <div class="empty"></div>
+          <button data-dir="up">▲</button>
+          <div class="empty"></div>
+          <button data-dir="left">◀</button>
+          <div class="empty"></div>
+          <button data-dir="right">▶</button>
+          <div class="empty"></div>
+          <button data-dir="down">▼</button>
+          <div class="empty"></div>
+        </div>
+        <button class="action-btn" id="actionBtn">ДЕЙСТ<br>ВИЕ</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="screen" id="screen-final">
+    <div class="final" id="final-container"></div>
+  </section>
+
+</div>
+
+<div class="modal-overlay" id="modal-overlay">
+  <div class="modal" id="modal"></div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* =========================================================
+   ДАННЫЕ: 50 новогодних фильмов
+   ========================================================= */
+const FILMS = [
+  {t:"Ирония судьбы, или С легким паром!",y:1975,r:8.2,v:631645,url:"https://www.kinopoisk.ru/film/77331/",p:"https://cdnrrviubnyuntopbez5.svc.cdn.yandex.net/get-kinopoisk-image/1704946/9ba8e12c-ab68-4ec5-83e1-f6f8d787700c/72x108"},
+  {t:"Вечера на хуторе близ Диканьки",y:1961,r:8.3,v:290884,url:"https://www.kinopoisk.ru/film/45694/",p:"https://cdnrrviubnyuntopbez5.svc.cdn.yandex.net/get-kinopoisk-image/1946459/159718ab-4670-4ea4-8a87-4348ae06b9d6/72x108"},
+  {t:"Морозко",y:1964,r:8.1,v:371450,url:"https://www.kinopoisk.ru/film/46701/",p:"https://cdnrrviubnyuntopbez5.svc.cdn.yandex.net/get-kinopoisk-image/6201401/4b7474d3-597c-424c-8cae-8553306a83b9/72x108"},
+  {t:"Чародеи",y:1982,r:8.0,v:175461,url:"https://www.kinopoisk.ru/film/79450/",p:"https://cdnrrviubnyuntopbez5.svc.cdn.yandex.net/get-kinopoisk-image/1704946/dc10ecc5-a684-4586-bdb3-ed8e589df877/72x108"},
+  {t:"Карнавальная ночь",y:1956,r:8.2,v:269614,url:"https://www.kinopoisk.ru/film/44720/",p:"https://cdnrrviubnyuntopbez5.svc.cdn.yandex.net/get-kinopoisk-image/1946459/f1a9f067-a432-4665-86f7-bfdcda8df8b7/72x108"},
+  {t:"Приходи на меня посмотреть",y:2000,r:8.2,v:141672,url:"https://www.kinopoisk.ru/film/40955/",p:"https://cdnrrviubnyuntopbez5.svc.cdn.yandex.net/get-kinopoisk-image/1898899/cdca2aed-0966-464a-b82d-b44f5603be51/72x108"},
+  {t:"Старый Новый год",y:1980,r:8.2,v:69461,url:"https://www.kinopoisk.ru/film/43986/",p:"https://cdnrrviubnyuntopbez5.svc.cdn.yandex.net/get-kinopoisk-image/4774061/3c8c91e5-0b8c-4ca7-aec0-20505da0f7ba/72x108"},
+  {t:"Зигзаг удачи",y:1968,r:8.0,v:79730,url:"https://www.kinopoisk.ru/film/45352/",p:"https://cdnrrviubnyuntopbez5.svc.cdn.yandex.net/get-kinopoisk-image/10893610/267d7185-7df4-4305-892c-3b5d5f0918a4/72x108"},
+  {t:"Новогодние приключения Маши и Вити",y:1975,r:8.0,v:124239,url:"https://www.kinopoisk.ru/film/252037/",p:"https://cdnrrviubnyuntopbez5.svc.cdn.yandex.net/get-kinopoisk-image/9784475/37954f1f-2824-4044-b956-6903283bbc83/72x108"},
+  {t:"Сирота казанская",y:1997,r:7.9,v:47105,url:"https://www.kinopoisk.ru/film/41058/",p:"https://cdnrrviubnyuntopbez5.svc.cdn.yandex.net/get-kinopoisk-image/4716873/1e44b8af-80c1-4b47-bde2-1684ebc381e1/72x108"},
+  {t:"Невеста",y:2006,r:7.6,v:10244,url:"https://www.kinopoisk.ru/film/277556/",p:"https://cdnrrviubnyuntopbez5.svc.cdn.yandex.net/get-kinopoisk-image/1946459/f8abac87-7844-4292-84d5-12414d806244/72x108"},
+  {t:"Снежная королева",y:1966,r:7.7,v:58738,url:"https://www.kinopoisk.ru/film/43890/",p:"https://cdnrrviubnyuntopbez5.svc.cdn.yandex.net/get-kinopoisk-image/9784475/357f4de1-4dca-4674-8800-b7415fa8403f/72x108"},
+  {t:"Бедная Саша",y:1997,r:7.6,v:36309,url:"https://www.kinopoisk.ru/film/41481/",p:"https://cdnrrviubnyuntopbez5.svc.cdn.yandex.net/get-kinopoisk-image/1704946/6f22baea-b19d-4804-9be4-bb39aa2b1aa3/72x108"},
+  {t:"Кушать подано!",y:2005,r:7.3,v:16224,url:"https://www.kinopoisk.ru/film/257825/",p:"https://cdnrrviubnyuntopbez5.svc.cdn.yandex.net/get-kinopoisk-image/1629390/53dc1fcc-625d-4c27-aa71-01be810c0bf1/72x108"},
+  {t:"Железнодорожный романс",y:2002,r:7.2,v:7221,url:"https://www.kinopoisk.ru/film/161075/",p:"https://cdnrrviubnyuntopbez5.svc.cdn.yandex.net/get-kinopoisk-image/1900788/5864dd0b-cd38-46c9-a8c9-47025ecfed7f/72x108"},
+  {t:"Со мною вот что происходит",y:2012,r:7.3,v:60207,url:"https://www.kinopoisk.ru/film/659909/",p:"https://cdnrrviubnyuntopbez5.svc.cdn.yandex.net/get-kinopoisk-image/4716873/707f9f22-0d92-4780-a1f0-7a7e6d48ca56/72x108"},
+  {t:"Снежная любовь, или Сон в зимнюю ночь",y:2003,r:7.2,v:7006,url:"https://www.kinopoisk.ru/film/412501/",p:"https://cdnrrviubnyuntopbez5.svc.cdn.yandex.net/get-kinopoisk-image/1898899/3440e4fc-7834-47f2-92d0-1b1207e8968f/72x108"},
+  {t:"Снегурочка",y:1968,r:7.2,v:14689,url:"https://www.kinopoisk.ru/film/43889/",p:"https://cdnrrviubnyuntopbez5.svc.cdn.yandex.net/get-kinopoisk-image/1600647/44eb800c-576a-4b10-9d32-172ccfd406db/72x108"},
+  {t:"Мужчина в моей голове",y:2009,r:7.1,v:22168,url:"https://www.kinopoisk.ru/film/492099/",p:"https://cdnrrviubnyuntopbez5.svc.cdn.yandex.net/get-kinopoisk-image/1599028/d6c395db-5ab0-4832-b119-b14791c8c9f1/72x108"},
+  {t:"Тариф Новогодний",y:2008,r:7.1,v:101632,url:"https://www.kinopoisk.ru/film/406141/",p:"https://cdnrrviubnyuntopbez5.svc.cdn.yandex.net/get-kinopoisk-image/1599028/f147a146-1c4f-448c-af89-916fa217f30a/72x108"},
+  {t:"Ёлки 2",y:2011,r:7.0,v:160859,url:"https://www.kinopoisk.ru/film/573817/",p:"https://cdnrrviubnyuntopbez5.svc.cdn.yandex.net/get-kinopoisk-image/1599028/0523a7d2-b616-471d-b094-180310a37c69/72x108"},
+  {t:"Снежный ангел",y:2007,r:null,v:6078,url:"https://www.kinopoisk.ru/film/402628/",p:"https://cdnrrviubnyuntopbez5.svc.cdn.yandex.net/get-kinopoisk-image/1704946/54c57ce9-0d28-445b-b458-357b47028d03/72x108"},
+  {t:"Француз",y:2004,r:7.1,v:30664,url:"https://www.kinopoisk.ru/film/84998/",p:"https://cdnrrviubnyuntopbez5.svc.cdn.yandex.net/get-kinopoisk-image/1600647/cd3da7f9-fa7f-4c87-aec8-8cc892a49626/72x108"},
+  {t:"Четвертое желание",y:2003,r:null,v:3479,url:"https://www.kinopoisk.ru/film/325792/",p:"https://cdnrrviubnyuntopbez5.svc.cdn.yandex.net/get-kinopoisk-image/1777765/ec778fa8-7fb7-4a2e-9f46-31f2d876d7f6/72x108"},
+  {t:"Ёлки",y:2010,r:null,v:233907,url:"https://www.kinopoisk.ru/film/493768/",p:"https://cdnrrviubnyuntopbez5.svc.cdn.yandex.net/get-kinopoisk-image/1599028/c1453b97-3042-44eb-a744-b980b464de88/72x108"},
+  {t:"Суженый-ряженый",y:2007,r:null,v:4286,url:"https://www.kinopoisk.ru/film/403492/",p:"https://cdnrrviubnyuntopbez5.svc.cdn.yandex.net/get-kinopoisk-image/1898899/24d3dfa3-55a7-4f95-8025-a00a2e8e225d/72x108"},
+  {t:"Эта веселая планета",y:1973,r:null,v:11219,url:"https://www.kinopoisk.ru/film/94970/",p:"https://cdnrrviubnyuntopbez5.svc.cdn.yandex.net/get-kinopoisk-image/1900788/a27b9c85-c03f-4f38-a245-19c3e2ee0175/72x108"},
+  {t:"Моя мама Снегурочка",y:2007,r:null,v:4462,url:"https://www.kinopoisk.ru/film/438255/",p:"https://cdnrrviubnyuntopbez5.svc.cdn.yandex.net/get-kinopoisk-image/1773646/b2999096-6f93-47bb-bf39-281934f5ab07/72x108"},
+  {t:"О чём ещё говорят мужчины",y:2011,r:null,v:194837,url:"https://www.kinopoisk.ru/film/502733/",p:"https://cdnrrviubnyuntopbez5.svc.cdn.yandex.net/get-kinopoisk-image/10809116/79ca3498-d865-426b-8ec5-d4e65240e563/72x108"},
+  {t:"Глухарь. Приходи, Новый год!",y:2009,r:null,v:5426,url:"https://www.kinopoisk.ru/film/491892/",p:"https://cdnrrviubnyuntopbez5.svc.cdn.yandex.net/get-kinopoisk-image/1629390/9836c7f2-ef0e-4adf-a9ea-cc4ccd68d9e5/72x108"},
+  {t:"Президент и его внучка",y:1999,r:null,v:28838,url:"https://www.kinopoisk.ru/film/40953/",p:"https://cdnrrviubnyuntopbez5.svc.cdn.yandex.net/get-kinopoisk-image/1600647/14b15a2a-d475-48e5-a4a0-f431a0b4d906/72x108"},
+  {t:"Юбилей",y:2007,r:null,v:1200,url:"https://www.kinopoisk.ru/film/418675/",p:"https://cdnrrviubnyuntopbez5.svc.cdn.yandex.net/get-kinopoisk-image/1898899/38f92d44-6898-4f9b-bf2f-164770d57c47/72x108"},
+  {t:"Ночь закрытых дверей",y:2008,r:null,v:2720,url:"https://www.kinopoisk.ru/film/432654/",p:"https://cdnrrviubnyuntopbez5.svc.cdn.yandex.net/get-kinopoisk-image/1629390/b07e9591-c5ac-409e-b752-042c1540c92b/72x108"},
+  {t:"Операция «С новым годом»",y:1996,r:null,v:16583,url:"https://www.kinopoisk.ru/film/79452/",p:"https://cdnrrviubnyuntopbez5.svc.cdn.yandex.net/get-kinopoisk-image/1773646/90b38d14-34c0-47b7-b9a5-fcf659bee70e/72x108"},
+  {t:"Новогодние сваты",y:2010,r:null,v:44558,url:"https://www.kinopoisk.ru/film/574259/",p:"https://cdnrrviubnyuntopbez5.svc.cdn.yandex.net/get-kinopoisk-image/1600647/21a1913c-fa7f-43c2-90d2-09abcdb833af/72x108"},
+  {t:"Прощайте, доктор Фрейд",y:2004,r:null,v:1645,url:"https://www.kinopoisk.ru/film/94197/",p:"https://cdnrrviubnyuntopbez5.svc.cdn.yandex.net/get-kinopoisk-image/1704946/f82ef91d-0f8d-4b11-80ef-c13fd71590a5/72x108"},
+  {t:"Снегурочку вызывали?",y:1985,r:null,v:4754,url:"https://www.kinopoisk.ru/film/276121/",p:"https://cdnrrviubnyuntopbez5.svc.cdn.yandex.net/get-kinopoisk-image/1704946/6ecd3a7f-bdf2-432a-ba0e-5d36430ce046/72x108"},
+  {t:"Похищение",y:1969,r:null,v:2689,url:"https://www.kinopoisk.ru/film/466875/",p:"https://cdnrrviubnyuntopbez5.svc.cdn.yandex.net/get-kinopoisk-image/1773646/e29f0b6c-7ffe-42d0-9c15-7b478cbd7b5d/72x108"},
+  {t:"Лузер",y:2007,r:null,v:5247,url:"https://www.kinopoisk.ru/film/401770/",p:"https://cdnrrviubnyuntopbez5.svc.cdn.yandex.net/get-kinopoisk-image/1898899/5815cbfb-08fe-4e6b-b186-115058effb43/72x108"},
+  {t:"Странное Рождество",y:2006,r:null,v:1506,url:"https://www.kinopoisk.ru/film/427863/",p:"https://cdnrrviubnyuntopbez5.svc.cdn.yandex.net/get-kinopoisk-image/1599028/27541f3f-9b39-40f3-8fb7-5fd6300f1c58/72x108"},
+  {t:"Кто приходит в зимний вечер",y:2006,r:null,v:1358,url:"https://www.kinopoisk.ru/film/423044/",p:"https://cdnrrviubnyuntopbez5.svc.cdn.yandex.net/get-kinopoisk-image/1599028/e8999f42-3c81-47eb-9cf2-d2ae0df6d355/72x108"},
+  {t:"С Новым годом, папа!",y:2005,r:null,v:1337,url:"https://www.kinopoisk.ru/film/414598/",p:"https://cdnrrviubnyuntopbez5.svc.cdn.yandex.net/get-kinopoisk-image/1946459/949975d8-69bb-4985-be0f-e059c7b1d7ae/72x108"},
+  {t:"Новогодний детектив",y:2010,r:null,v:3977,url:"https://www.kinopoisk.ru/film/573995/",p:"https://cdnrrviubnyuntopbez5.svc.cdn.yandex.net/get-kinopoisk-image/1599028/579ebfec-5a3c-4dc1-af25-4a4f7a3a754e/72x108"},
+  {t:"32 декабря",y:2004,r:null,v:12593,url:"https://www.kinopoisk.ru/film/94976/",p:"https://cdnrrviubnyuntopbez5.svc.cdn.yandex.net/get-kinopoisk-image/1773646/1bbd9b73-04d0-4d1f-b162-c9a9b70bb36d/72x108"},
+  {t:"Убить карпа",y:2005,r:null,v:1609,url:"https://www.kinopoisk.ru/film/276271/",p:"https://cdnrrviubnyuntopbez5.svc.cdn.yandex.net/get-kinopoisk-image/1773646/0a7ba325-5bcb-43dc-a681-b9b37ed59e5f/72x108"},
+  {t:"Дед Мороз поневоле",y:2007,r:null,v:1220,url:"https://www.kinopoisk.ru/film/427905/",p:"https://cdnrrviubnyuntopbez5.svc.cdn.yandex.net/get-kinopoisk-image/1777765/2a5c223e-78c1-4cbf-a668-00f257a3413a/72x108"},
+  {t:"Тушите свет",y:2008,r:null,v:1615,url:"https://www.kinopoisk.ru/film/432562/",p:"https://cdnrrviubnyuntopbez5.svc.cdn.yandex.net/get-kinopoisk-image/1946459/d86c005e-e622-4000-a908-c261d9938786/72x108"},
+  {t:"Сверчок за очагом",y:2001,r:null,v:1089,url:"https://www.kinopoisk.ru/film/404438/",p:"https://cdnrrviubnyuntopbez5.svc.cdn.yandex.net/get-kinopoisk-image/1629390/308fe23c-4097-4123-a385-1de310936d3d/72x108"},
+  {t:"Ой, мороз, мороз!",y:2005,r:null,v:1648,url:"https://www.kinopoisk.ru/film/419406/",p:"https://cdnrrviubnyuntopbez5.svc.cdn.yandex.net/get-kinopoisk-image/1629390/dab5a927-dc11-40fd-ad32-1267b0890bc8/72x108"},
+  {t:"Откройте, Дед Мороз!",y:2007,r:null,v:1461,url:"https://www.kinopoisk.ru/film/403493/",p:"https://cdnrrviubnyuntopbez5.svc.cdn.yandex.net/get-kinopoisk-image/1599028/6d4ff773-d24a-4939-bf7a-7d9051cf232d/72x108"}
+];
+
+/* =========================================================
+   СОСТОЯНИЕ ИГРЫ
+   ========================================================= */
+let state = {
+  score:0,
+  collected:[false,false,false,false,false,false], // успешные ответы
+  failed:[false,false,false,false,false,false],    // проваленные попытки
+};
+let gameLoopId = null;
+
+/* =========================================================
+   НАВИГАЦИЯ
+   ========================================================= */
+function go(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  const el = document.getElementById('screen-'+id);
+  void el.offsetWidth;
+  el.classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function startGame(){
+  state = {
+    score:0,
+    collected:[false,false,false,false,false,false],
+    failed:[false,false,false,false,false,false]
+  };
+  updateInventoryUI();
+  document.getElementById('score-display').textContent = '0 баллов';
+  go('game');
+  setTimeout(()=>initGame(), 100);
+}
+
+/* =========================================================
+   ПИКСЕЛЬНАЯ ИГРА
+   ========================================================= */
+const canvas = document.getElementById('gameCanvas');
+const ctx = canvas.getContext('2d');
+ctx.imageSmoothingEnabled = false;
+
+// Логические размеры игры
+const GAME_WIDTH = 480;
+const GAME_HEIGHT = 320;
+const TILE = 16;
+const MAP_W = 30;
+const MAP_H = 20;
+
+// Функция масштабирования канваса под экран
+function resizeCanvas() {
+  const container = canvas.parentElement;
+  const maxWidth = container.clientWidth;
+  const maxHeight = container.clientHeight;
+  
+  // Сохраняем пропорции 3:2
+  let scale = Math.min(maxWidth / GAME_WIDTH, maxHeight / GAME_HEIGHT);
+  
+  // Ограничиваем максимальный размер, чтобы не было слишком крупно на десктопе
+  if (scale > 1.5 && window.innerWidth > 768) scale = 1.5;
+
+  canvas.style.width = `${GAME_WIDTH * scale}px`;
+  canvas.style.height = `${GAME_HEIGHT * scale}px`;
+}
+window.addEventListener('resize', resizeCanvas);
+
+const PAL = {
+  floorDark:'#2a1810', floorLight:'#3d2418', floorAccent:'#4a2d1e',
+  wallDark:'#1a0a08', wallMid:'#3a1a14', wallLight:'#5a2a20', wallTop:'#6a3428',
+  wood:'#5c3a20', woodDark:'#3a2410', woodLight:'#7a4e2c',
+  snow:'#e8e4d8', snowDark:'#b8b0a0',
+  greenDark:'#1a3a24', greenMid:'#2d5a38', greenLight:'#4a8a58',
+  gold:'#d4a84b', goldBright:'#e8c36b',
+  red:'#a83232', redBright:'#c94545',
+  cream:'#f5ecd7', black:'#0a0205',
+  skin:'#f0c8a0', skinDark:'#c89878', hair:'#3a2418',
+  coat:'#4a2028', coatDark:'#2a1018', scarf:'#c94545', scarfDark:'#8a2828',
+  morozCoat:'#c94545', morozCoatDark:'#8a2828', morozTrim:'#f5ecd7',
+  morozHat:'#c94545', morozSkin:'#f0c8a0', morozBeard:'#f5ecd7',
+  windowBlue:'#3a5a8a', windowBlueDark:'#2a4068',
+  conveyor:'#4a4a52', conveyorDark:'#2a2a32', conveyorLight:'#6a6a72'
+};
+
+const MAP = [];
+function buildMap(){
+  for(let y=0;y<MAP_H;y++){
+    MAP[y] = [];
+    for(let x=0;x<MAP_W;x++) MAP[y][x] = 0;
+  }
+  for(let x=0;x<MAP_W;x++){MAP[0][x]=1;MAP[MAP_H-1][x]=1;}
+  for(let y=0;y<MAP_H;y++){MAP[y][0]=1;MAP[y][MAP_W-1]=1;}
+  for(let y=1;y<MAP_H-1;y++){
+    if(y!==9 && y!==10) MAP[y][15]=1;
+  }
+  for(let x=2;x<14;x++){MAP[3][x]=2;MAP[16][x]=2;}
+  for(let x=17;x<28;x++){MAP[3][x]=2;MAP[16][x]=2;}
+  MAP[1][4]=4;MAP[1][5]=4; MAP[1][10]=4;MAP[1][11]=4;
+  MAP[1][19]=4;MAP[1][20]=4; MAP[1][25]=4;MAP[1][26]=4;
+  MAP[5][3]=3;MAP[14][3]=3; MAP[5][26]=3;MAP[14][26]=3;
+  for(let x=18;x<27;x++){MAP[10][x]=5;}
+}
+buildMap();
+
+const TOYS = [
+  {id:0, x:6,  y:7,  emoji:'⭐', name:'Звезда',       task:1},
+  {id:1, x:11, y:12, emoji:'🔴', name:'Шар',          task:2},
+  {id:2, x:20, y:6,  emoji:'🔔', name:'Колокольчик',  task:3},
+  {id:3, x:24, y:13, emoji:'🎁', name:'Подарок',      task:4},
+  {id:4, x:8,  y:18, emoji:'❄️', name:'Снежинка',     task:5},
+  {id:5, x:22, y:18, emoji:'🎄', name:'Ёлочка',       task:6}
+];
+const DED = {x:27, y:9};
+
+const player = {
+  x: 2*TILE, y: 9*TILE,
+  w: 12, h: 14,
+  speed: 1.5,
+  dir: 'down',
+  frame: 0,
+  frameTimer: 0,
+  moving: false
+};
+
+const keys = {};
+window.addEventListener('keydown', e=>{
+  keys[e.key.toLowerCase()] = true;
+  if(['arrowup','arrowdown','arrowleft','arrowright',' '].includes(e.key.toLowerCase())) e.preventDefault();
+  if(e.key === ' ' || e.key.toLowerCase() === 'e') tryInteract();
+});
+window.addEventListener('keyup', e=>{keys[e.key.toLowerCase()] = false;});
+
+let touchDir = null;
+document.querySelectorAll('.dpad button').forEach(btn=>{
+  const dir = btn.dataset.dir;
+  const start = ()=>{touchDir = dir;};
+  const end = ()=>{if(touchDir===dir) touchDir=null;};
+  // Используем touchstart/touchend для мгновенной реакции на мобильных
+  btn.addEventListener('touchstart',e=>{e.preventDefault();start();},{passive:false});
+  btn.addEventListener('touchend',e=>{e.preventDefault();end();},{passive:false});
+  // Для тестирования мышкой
+  btn.addEventListener('mousedown',start);
+  btn.addEventListener('mouseup',end);
+  btn.addEventListener('mouseleave',end);
+});
+document.getElementById('actionBtn').addEventListener('click', tryInteract);
+document.getElementById('actionBtn').addEventListener('touchstart', e=>{e.preventDefault();tryInteract();},{passive:false});
+
+function isBlocked(px, py){
+  const points = [
+    [px+2, py+2], [px+player.w-2, py+2],
+    [px+2, py+player.h-2], [px+player.w-2, py+player.h-2]
+  ];
+  for(const [x,y] of points){
+    const tx = Math.floor(x/TILE);
+    const ty = Math.floor(y/TILE);
+    if(tx<0||ty<0||tx>=MAP_W||ty>=MAP_H) return true;
+    const t = MAP[ty][tx];
+    if(t===1 || t===2 || t===3 || t===5) return true;
+  }
+  return false;
+}
+
+function update(){
+  let dx=0, dy=0;
+  if(keys['arrowup']||keys['w']||touchDir==='up') dy=-1;
+  else if(keys['arrowdown']||keys['s']||touchDir==='down') dy=1;
+  else if(keys['arrowleft']||keys['a']||touchDir==='left') dx=-1;
+  else if(keys['arrowright']||keys['d']||touchDir==='right') dx=1;
+
+  player.moving = (dx!==0||dy!==0);
+
+  if(player.moving){
+    if(dx!==0) player.dir = dx>0?'right':'left';
+    else player.dir = dy>0?'down':'up';
+
+    const nx = player.x + dx*player.speed;
+    const ny = player.y + dy*player.speed;
+    if(!isBlocked(nx, player.y)) player.x = nx;
+    if(!isBlocked(player.x, ny)) player.y = ny;
+
+    player.frameTimer++;
+    if(player.frameTimer>8){player.frame=(player.frame+1)%4;player.frameTimer=0;}
+  } else {
+    player.frame = 0;
+  }
+  updateHint();
+}
+
+function updateHint(){
+  const hint = document.getElementById('game-hint');
+  for(const toy of TOYS){
+    if(state.collected[toy.id] || state.failed[toy.id]) continue;
+    const tx = toy.x*TILE+8, ty = toy.y*TILE+8;
+    const px = player.x+player.w/2, py = player.y+player.h/2;
+    if(Math.hypot(tx-px, ty-py) < 24){
+      hint.textContent = `SPACE — взять ${toy.name.toLowerCase()}`;
+      hint.style.animation = 'none';
+      return;
+    }
+  }
+  const dx = DED.x*TILE+8, dy = DED.y*TILE+8;
+  const px = player.x+player.w/2, py = player.y+player.h/2;
+  if(Math.hypot(dx-px, dy-py) < 28){
+    const allProcessed = state.collected.every((c,i)=>c || state.failed[i]);
+    if(allProcessed){
+      hint.textContent = 'SPACE — отдать игрушки Деду Морозу';
+    } else {
+      const remaining = 6 - state.collected.filter(c=>c).length - state.failed.filter(c=>c).length;
+      hint.textContent = `Собрано: ${state.collected.filter(c=>c).length}/6 · Осталось попыток: ${remaining}`;
+    }
+    hint.style.animation = 'none';
+    return;
+  }
+  hint.textContent = '← → ↑ ↓ — ходить · SPACE — действие';
+  hint.style.animation = 'blink 1.5s infinite';
+}
+
+function tryInteract(){
+  if(document.getElementById('modal-overlay').classList.contains('active')) return;
+  
+  for(const toy of TOYS){
+    const tx = toy.x*TILE+8, ty = toy.y*TILE+8;
+    const px = player.x+player.w/2, py = player.y+player.h/2;
+    if(Math.hypot(tx-px, ty-py) < 24){
+      if(state.collected[toy.id]){
+        showToast('Эта игрушка уже в мешке');
+        return;
+      }
+      if(state.failed[toy.id]){
+        showToast('Загадку разгадать не удалось...');
+        return;
+      }
+      openQuestion(toy);
+      return;
+    }
+  }
+  
+  const dx = DED.x*TILE+8, dy = DED.y*TILE+8;
+  const px = player.x+player.w/2, py = player.y+player.h/2;
+  if(Math.hypot(dx-px, dy-py) < 28){
+    const allProcessed = state.collected.every((c,i)=>c || state.failed[i]);
+    if(allProcessed){
+      finishGame();
+    } else {
+      const collected = state.collected.filter(c=>c).length;
+      const failed = state.failed.filter(c=>c).length;
+      showToast(`Собрано: ${collected}/6 · Провалено: ${failed}/6`);
+    }
+  }
+}
+
+/* =========================================================
+   РЕНДЕР
+   ========================================================= */
+function draw(){
+  // Очищаем канвас логическими размерами
+  ctx.clearRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
+  
+  for(let y=0;y<MAP_H;y++){
+    for(let x=0;x<MAP_W;x++){
+      const t = MAP[y][x];
+      const px = x*TILE, py = y*TILE;
+      if(t===0){
+        const variant = ((x+y)%2===0) ? PAL.floorDark : PAL.floorLight;
+        ctx.fillStyle = variant;
+        ctx.fillRect(px, py, TILE, TILE);
+        if((x*7+y*13)%11===0){
+          ctx.fillStyle = PAL.floorAccent;
+          ctx.fillRect(px+4, py+6, 2, 2);
+        }
+      } else if(t===1){
+        ctx.fillStyle = PAL.wallDark; ctx.fillRect(px, py, TILE, TILE);
+        ctx.fillStyle = PAL.wallMid; ctx.fillRect(px, py, TILE, TILE-4);
+        ctx.fillStyle = PAL.wallLight; ctx.fillRect(px+1, py+1, TILE-2, 2);
+        ctx.fillStyle = PAL.wallTop; ctx.fillRect(px+1, py+3, TILE-2, 1);
+      } else if(t===2){
+        ctx.fillStyle = PAL.floorDark; ctx.fillRect(px, py, TILE, TILE);
+        ctx.fillStyle = PAL.wood; ctx.fillRect(px, py+8, TILE, 6);
+        ctx.fillStyle = PAL.woodDark; ctx.fillRect(px, py+13, TILE, 1);
+        ctx.fillStyle = PAL.woodLight; ctx.fillRect(px, py+8, TILE, 1);
+        const seed = (x*31+y*17)%5;
+        if(seed===0){ctx.fillStyle=PAL.red;ctx.fillRect(px+3,py+3,4,5);}
+        else if(seed===1){ctx.fillStyle=PAL.gold;ctx.fillRect(px+9,py+4,4,4);}
+        else if(seed===2){ctx.fillStyle=PAL.greenLight;ctx.fillRect(px+5,py+2,5,6);}
+        else if(seed===3){ctx.fillStyle=PAL.redBright;ctx.fillRect(px+2,py+4,3,4);ctx.fillStyle=PAL.gold;ctx.fillRect(px+10,py+3,4,5);}
+        else {ctx.fillStyle=PAL.goldBright;ctx.fillRect(px+6,py+3,4,5);}
+      } else if(t===3){
+        ctx.fillStyle = PAL.floorDark; ctx.fillRect(px, py, TILE, TILE);
+        ctx.fillStyle = PAL.woodDark; ctx.fillRect(px+6, py+12, 4, 4);
+        ctx.fillStyle = PAL.greenDark; ctx.fillRect(px+2, py+8, 12, 4);
+        ctx.fillStyle = PAL.greenMid; ctx.fillRect(px+4, py+4, 8, 5);
+        ctx.fillStyle = PAL.greenLight; ctx.fillRect(px+6, py+1, 4, 4);
+        ctx.fillStyle = PAL.redBright; ctx.fillRect(px+5, py+6, 2, 2);
+        ctx.fillStyle = PAL.goldBright; ctx.fillRect(px+9, py+9, 2, 2);
+        ctx.fillStyle = PAL.goldBright; ctx.fillRect(px+7, py, 2, 2);
+      } else if(t===4){
+        ctx.fillStyle = PAL.wallDark; ctx.fillRect(px, py, TILE, TILE);
+        ctx.fillStyle = PAL.windowBlueDark; ctx.fillRect(px+2, py+2, TILE-4, TILE-4);
+        ctx.fillStyle = PAL.windowBlue; ctx.fillRect(px+3, py+3, TILE-6, TILE-6);
+        ctx.fillStyle = PAL.cream; 
+        ctx.fillRect(px+4, py+5, 1, 1); ctx.fillRect(px+9, py+8, 1, 1); ctx.fillRect(px+6, py+11, 1, 1);
+        ctx.fillStyle = PAL.woodDark;
+        ctx.fillRect(px+TILE/2-1, py+2, 2, TILE-4);
+        ctx.fillRect(px+2, py+TILE/2-1, TILE-4, 2);
+      } else if(t===5){
+        ctx.fillStyle = PAL.floorDark; ctx.fillRect(px, py, TILE, TILE);
+        ctx.fillStyle = PAL.conveyorDark; ctx.fillRect(px, py+4, TILE, 8);
+        ctx.fillStyle = PAL.conveyor; ctx.fillRect(px, py+5, TILE, 6);
+        const offset = (Date.now()/100 + x*4) % 8;
+        ctx.fillStyle = PAL.conveyorLight;
+        for(let i=0;i<3;i++){
+          const rx = (i*6 + offset) % TILE;
+          ctx.fillRect(px+rx, py+6, 2, 4);
+        }
+      }
+    }
+  }
+
+  ctx.fillStyle = PAL.red;
+  ctx.fillRect((DED.x-1)*TILE+2, (DED.y-1)*TILE+4, TILE*3-4, TILE*3-8);
+  ctx.fillStyle = PAL.goldBright;
+  ctx.fillRect((DED.x-1)*TILE+4, (DED.y-1)*TILE+6, TILE*3-8, 1);
+  ctx.fillRect((DED.x-1)*TILE+4, (DED.y+1)*TILE+2, TILE*3-8, 1);
+
+  const time = Date.now()/300;
+  for(const toy of TOYS){
+    if(state.collected[toy.id]) continue;
+    const px = toy.x*TILE, py = toy.y*TILE;
+    const bob = Math.sin(time + toy.id)*2;
+    drawToy(px, py+4+bob, toy.id, state.failed[toy.id]);
+  }
+
+  drawDedMoroz(DED.x*TILE-4, DED.y*TILE-8);
+  drawPlayer(player.x, player.y);
+}
+
+function drawToy(x, y, id, failed){
+  if(failed){
+    ctx.fillStyle = 'rgba(80,60,60,0.3)'; ctx.fillRect(x-1, y-1, 18, 18);
+    ctx.fillStyle = 'rgba(100,80,80,0.4)'; ctx.fillRect(x, y, 16, 16);
+    ctx.fillStyle = '#6a5a5a';
+    if(id===0){ 
+      ctx.fillRect(x+7, y+2, 2, 3); ctx.fillRect(x+3, y+5, 10, 2);
+      ctx.fillRect(x+5, y+7, 6, 2); ctx.fillRect(x+4, y+9, 2, 3); ctx.fillRect(x+10, y+9, 2, 3);
+    } else if(id===1){ 
+      ctx.fillRect(x+4, y+4, 8, 8); ctx.fillRect(x+3, y+5, 10, 6); ctx.fillRect(x+5, y+3, 6, 1);
+      ctx.fillRect(x+7, y+2, 2, 2);
+    } else if(id===2){ 
+      ctx.fillRect(x+6, y+2, 4, 2); ctx.fillRect(x+5, y+4, 6, 2);
+      ctx.fillRect(x+4, y+6, 8, 4); ctx.fillRect(x+3, y+10, 10, 2);
+      ctx.fillRect(x+7, y+12, 2, 2);
+    } else if(id===3){ 
+      ctx.fillRect(x+3, y+4, 10, 9);
+      ctx.fillRect(x+7, y+4, 2, 9); ctx.fillRect(x+3, y+7, 10, 2);
+    } else if(id===4){ 
+      ctx.fillRect(x+7, y+2, 2, 12); ctx.fillRect(x+2, y+7, 12, 2);
+      ctx.fillRect(x+4, y+4, 2, 2); ctx.fillRect(x+10, y+4, 2, 2);
+      ctx.fillRect(x+4, y+10, 2, 2); ctx.fillRect(x+10, y+10, 2, 2);
+    } else if(id===5){ 
+      ctx.fillRect(x+7, y+11, 2, 3);
+      ctx.fillRect(x+4, y+8, 8, 3);
+      ctx.fillRect(x+5, y+5, 6, 4);
+      ctx.fillRect(x+6, y+2, 4, 4);
+      ctx.fillRect(x+7, y+1, 2, 1);
+    }
+    ctx.fillStyle = PAL.redBright;
+    ctx.fillRect(x+6, y+6, 4, 1);
+    ctx.fillRect(x+7, y+5, 2, 3);
+    return;
+  }
+  
+  ctx.fillStyle = 'rgba(212,168,75,0.3)'; ctx.fillRect(x-1, y-1, 18, 18);
+  ctx.fillStyle = 'rgba(232,195,107,0.5)'; ctx.fillRect(x, y, 16, 16);
+  if(id===0){ 
+    ctx.fillStyle = PAL.goldBright;
+    ctx.fillRect(x+7, y+2, 2, 3); ctx.fillRect(x+3, y+5, 10, 2);
+    ctx.fillRect(x+5, y+7, 6, 2); ctx.fillRect(x+4, y+9, 2, 3); ctx.fillRect(x+10, y+9, 2, 3);
+    ctx.fillStyle = PAL.gold; ctx.fillRect(x+7, y+3, 2, 1);
+  } else if(id===1){ 
+    ctx.fillStyle = PAL.red; ctx.fillRect(x+4, y+4, 8, 8); ctx.fillRect(x+3, y+5, 10, 6); ctx.fillRect(x+5, y+3, 6, 1);
+    ctx.fillStyle = PAL.redBright; ctx.fillRect(x+5, y+5, 2, 2);
+    ctx.fillStyle = PAL.goldBright; ctx.fillRect(x+7, y+2, 2, 2);
+  } else if(id===2){ 
+    ctx.fillStyle = PAL.goldBright;
+    ctx.fillRect(x+6, y+2, 4, 2); ctx.fillRect(x+5, y+4, 6, 2);
+    ctx.fillRect(x+4, y+6, 8, 4); ctx.fillRect(x+3, y+10, 10, 2);
+    ctx.fillStyle = PAL.gold; ctx.fillRect(x+7, y+12, 2, 2);
+    ctx.fillStyle = PAL.red; ctx.fillRect(x+7, y+1, 2, 1);
+  } else if(id===3){ 
+    ctx.fillStyle = PAL.red; ctx.fillRect(x+3, y+4, 10, 9);
+    ctx.fillStyle = PAL.redBright; ctx.fillRect(x+3, y+4, 10, 1);
+    ctx.fillStyle = PAL.goldBright; ctx.fillRect(x+7, y+4, 2, 9); ctx.fillRect(x+3, y+7, 10, 2);
+    ctx.fillStyle = PAL.gold; ctx.fillRect(x+5, y+2, 2, 2); ctx.fillRect(x+9, y+2, 2, 2);
+  } else if(id===4){ 
+    ctx.fillStyle = PAL.cream;
+    ctx.fillRect(x+7, y+2, 2, 12); ctx.fillRect(x+2, y+7, 12, 2);
+    ctx.fillRect(x+4, y+4, 2, 2); ctx.fillRect(x+10, y+4, 2, 2);
+    ctx.fillRect(x+4, y+10, 2, 2); ctx.fillRect(x+10, y+10, 2, 2);
+    ctx.fillStyle = PAL.snowDark; ctx.fillRect(x+7, y+7, 2, 2);
+  } else if(id===5){ 
+    ctx.fillStyle = PAL.woodDark; ctx.fillRect(x+7, y+11, 2, 3);
+    ctx.fillStyle = PAL.greenDark; ctx.fillRect(x+4, y+8, 8, 3);
+    ctx.fillStyle = PAL.greenMid; ctx.fillRect(x+5, y+5, 6, 4);
+    ctx.fillStyle = PAL.greenLight; ctx.fillRect(x+6, y+2, 4, 4);
+    ctx.fillStyle = PAL.redBright; ctx.fillRect(x+5, y+7, 1, 1);
+    ctx.fillStyle = PAL.goldBright; ctx.fillRect(x+9, y+9, 1, 1); ctx.fillRect(x+7, y+1, 2, 1);
+  }
+}
+
+function drawPlayer(x, y){
+  const f = player.frame;
+  const dir = player.dir;
+  const walking = player.moving;
+  ctx.fillStyle = 'rgba(0,0,0,0.3)'; ctx.fillRect(x+1, y+13, 10, 2);
+  ctx.fillStyle = PAL.coatDark;
+  if(walking){
+    if(f===0||f===2){ ctx.fillRect(x+3, y+11, 2, 3); ctx.fillRect(x+7, y+11, 2, 3); } 
+    else if(f===1){ ctx.fillRect(x+2, y+11, 2, 3); ctx.fillRect(x+8, y+11, 2, 3); } 
+    else { ctx.fillRect(x+4, y+11, 2, 3); ctx.fillRect(x+6, y+11, 2, 3); }
+  } else { ctx.fillRect(x+3, y+11, 2, 3); ctx.fillRect(x+7, y+11, 2, 3); }
+  ctx.fillStyle = PAL.coat; ctx.fillRect(x+2, y+5, 8, 7);
+  ctx.fillStyle = PAL.coatDark; ctx.fillRect(x+2, y+5, 1, 7); ctx.fillRect(x+9, y+5, 1, 7);
+  ctx.fillStyle = PAL.scarf; ctx.fillRect(x+3, y+4, 6, 2);
+  ctx.fillStyle = PAL.scarfDark; ctx.fillRect(x+3, y+5, 6, 1);
+  ctx.fillStyle = PAL.scarf; ctx.fillRect(x+8, y+6, 2, 3);
+  ctx.fillStyle = PAL.skin; ctx.fillRect(x+4, y+1, 4, 4);
+  ctx.fillStyle = PAL.skinDark; ctx.fillRect(x+4, y+4, 4, 1);
+  ctx.fillStyle = PAL.hair; ctx.fillRect(x+3, y-1, 6, 2); ctx.fillRect(x+2, y+1, 8, 1);
+  ctx.fillStyle = PAL.coatDark; ctx.fillRect(x+3, y, 6, 1);
+  ctx.fillStyle = PAL.black;
+  if(dir==='down'){ ctx.fillRect(x+5, y+2, 1, 1); ctx.fillRect(x+7, y+2, 1, 1); } 
+  else if(dir==='left'){ ctx.fillRect(x+4, y+2, 1, 1); } 
+  else if(dir==='right'){ ctx.fillRect(x+8, y+2, 1, 1); }
+  if(!walking){
+    ctx.fillStyle = PAL.gold;
+    if(dir==='right'){ ctx.fillRect(x+10, y+7, 2, 2); ctx.fillRect(x+11, y+6, 1, 1); } 
+    else if(dir==='left'){ ctx.fillRect(x, y+7, 2, 2); ctx.fillRect(x, y+6, 1, 1); }
+  }
+}
+
+function drawDedMoroz(x, y){
+  ctx.fillStyle = 'rgba(0,0,0,0.4)'; ctx.fillRect(x+2, y+28, 20, 3);
+  ctx.fillStyle = PAL.morozCoat; ctx.fillRect(x+4, y+12, 16, 16);
+  ctx.fillStyle = PAL.morozCoatDark; ctx.fillRect(x+4, y+12, 1, 16); ctx.fillRect(x+19, y+12, 1, 16);
+  ctx.fillStyle = PAL.morozTrim; ctx.fillRect(x+4, y+26, 16, 2); ctx.fillRect(x+11, y+12, 2, 16);
+  ctx.fillStyle = PAL.goldBright; ctx.fillRect(x+9, y+16, 1, 1); ctx.fillRect(x+14, y+16, 1, 1);
+  ctx.fillRect(x+9, y+20, 1, 1); ctx.fillRect(x+14, y+20, 1, 1);
+  ctx.fillStyle = PAL.morozCoat; ctx.fillRect(x+1, y+14, 3, 10); ctx.fillRect(x+20, y+14, 3, 10);
+  ctx.fillStyle = PAL.morozTrim; ctx.fillRect(x+1, y+22, 3, 2); ctx.fillRect(x+20, y+22, 3, 2);
+  ctx.fillStyle = PAL.morozCoatDark; ctx.fillRect(x+1, y+24, 3, 2); ctx.fillRect(x+20, y+24, 3, 2);
+  ctx.fillStyle = PAL.morozSkin; ctx.fillRect(x+8, y+6, 8, 6);
+  ctx.fillStyle = PAL.redBright; ctx.fillRect(x+8, y+9, 2, 2); ctx.fillRect(x+14, y+9, 2, 2);
+  ctx.fillRect(x+11, y+9, 2, 2);
+  ctx.fillStyle = PAL.black; ctx.fillRect(x+9, y+8, 1, 1); ctx.fillRect(x+14, y+8, 1, 1);
+  ctx.fillStyle = PAL.morozBeard; ctx.fillRect(x+7, y+11, 10, 4); ctx.fillRect(x+8, y+15, 8, 2); ctx.fillRect(x+10, y+17, 4, 1);
+  ctx.fillStyle = PAL.morozHat; ctx.fillRect(x+7, y+2, 10, 5);
+  ctx.fillStyle = PAL.morozCoatDark; ctx.fillRect(x+7, y+2, 10, 1);
+  ctx.fillStyle = PAL.morozTrim; ctx.fillRect(x+6, y+6, 12, 2);
+  ctx.fillRect(x+11, y, 2, 2); ctx.fillRect(x+10, y+1, 4, 1);
+  ctx.fillStyle = PAL.red; ctx.fillRect(x+22, y+18, 6, 10);
+  ctx.fillStyle = PAL.morozCoatDark; ctx.fillRect(x+22, y+18, 6, 1);
+  ctx.fillStyle = PAL.goldBright; ctx.fillRect(x+24, y+17, 2, 2);
+}
+
+/* =========================================================
+   ИГРОВОЙ ЦИКЛ
+   ========================================================= */
+function gameLoop(){
+  update();
+  draw();
+  gameLoopId = requestAnimationFrame(gameLoop);
+}
+
+function initGame(){
+  player.x = 2*TILE;
+  player.y = 9*TILE;
+  if(gameLoopId) cancelAnimationFrame(gameLoopId);
+  resizeCanvas(); // Вызываем при старте
+  gameLoop();
+}
+
+window.addEventListener('blur', ()=>{for(const k in keys) keys[k]=false;touchDir=null;});
+
+/* =========================================================
+   ИНВЕНТАРЬ
+   ========================================================= */
+function updateInventoryUI(){
+  const slots = document.querySelectorAll('.inv-slot');
+  TOYS.forEach((toy,i)=>{
+    slots[i].classList.remove('filled','failed');
+    slots[i].textContent = '';
+    if(state.collected[i]){
+      slots[i].textContent = toy.emoji;
+      slots[i].classList.add('filled');
+    } else if(state.failed[i]){
+      slots[i].classList.add('failed');
+    }
+  });
+}
+
+/* =========================================================
+   МОДАЛКА ВОПРОСА
+   ========================================================= */
+function openQuestion(toy){
+  if(gameLoopId) cancelAnimationFrame(gameLoopId);
+  const overlay = document.getElementById('modal-overlay');
+  const modal = document.getElementById('modal');
+  overlay.classList.add('active');
+  renderQuestion(toy, modal);
+}
+
+function closeModal(){
+  document.getElementById('modal-overlay').classList.remove('active');
+  if(document.getElementById('screen-game').classList.contains('active')){
+    gameLoop();
+  }
+}
+
+function renderQuestion(toy, modal){
+  switch(toy.task){
+    case 1: renderQ1(modal, toy); break;
+    case 2: renderQ2(modal, toy); break;
+    case 3: renderQ3(modal, toy); break;
+    case 4: renderQ4(modal, toy); break;
+    case 5: renderQ5(modal, toy); break;
+    case 6: renderQ6(modal, toy); break;
+  }
+}
+
+function showFailure(modal, explainId, nextId, correctText){
+  const explain = document.getElementById(explainId);
+  explain.innerHTML = `
+    <div class="explain fail">
+      <strong>Неверно.</strong> ${correctText} Игрушка остаётся у вора — в этот раз она потеряна.
+    </div>
+  `;
+  const next = document.getElementById(nextId);
+  next.innerHTML = `<button class="btn btn-ghost" onclick="closeModal()">Понятно</button>`;
+  next.style.display = 'flex';
+}
+
+function markFailed(id){
+  state.failed[id] = true;
+  updateInventoryUI();
+}
+
+function collectToy(id){
+  state.collected[id] = true;
+  updateInventoryUI();
+  document.getElementById('score-display').textContent = `${state.score} баллов`;
+  showToast(`+1 ${TOYS[id].name.toLowerCase()} в мешок!`);
+}
+
+// --- ВОПРОС 1: Статистика ---
+function renderQ1(modal, toy){
+  const byViews = [...FILMS].sort((a,b)=>b.v-a.v)[0];
+  const byYear = [...FILMS].sort((a,b)=>a.y-b.y)[0];
+  const byRating = FILMS.filter(f=>f.r!==null).sort((a,b)=>b.r-a.r)[0];
+
+  const options = [
+    {text:`«${byViews.t}» — больше всего зрительских оценок (${byViews.v.toLocaleString('ru-RU')})`, correct:true},
+    {text:`«${byYear.t}» — самый молодой фильм в подборке`, correct:false},
+    {text:`«${byRating.t}» — получил самую низкую оценку среди классики`, correct:false}
+  ];
+
+  modal.innerHTML = `
+    <div class="modal__toy">${toy.emoji}</div>
+    <div class="modal__header">
+      <div class="modal__tag">Испытание 1 · Кино или статистика</div>
+      <div class="modal__title">Где правда, детектив?</div>
+    </div>
+    <p class="modal__desc">Перед тобой три утверждения о новогодних фильмах. Только одно из них — правда. Ошибёшься — игрушка потеряна.</p>
+    <div class="options" id="opt1">
+      ${options.map((o,i)=>`
+        <button class="option" data-correct="${o.correct}">
+          <span class="option__letter">${String.fromCharCode(65+i)}</span>
+          <span>${o.text}</span>
+        </button>
+      `).join('')}
+    </div>
+    <div id="explain1"></div>
+    <div class="modal__next" id="next1" style="display:none"></div>
+  `;
+
+  modal.querySelectorAll('.option').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      const isCorrect = btn.dataset.correct === 'true';
+      modal.querySelectorAll('.option').forEach(b=>{
+        b.disabled = true;
+        if(b.dataset.correct === 'true') b.classList.add('correct');
+      });
+      if(!isCorrect) btn.classList.add('wrong');
+
+      if(isCorrect){
+        state.score += 10;
+        document.getElementById('explain1').innerHTML = `
+          <div class="explain">
+            <strong>Верно!</strong> «Ирония судьбы» — абсолютный лидер: <strong>${byViews.v.toLocaleString('ru-RU')}</strong> оценок.
+          </div>
+        `;
+        document.getElementById('next1').innerHTML = `<button class="btn btn-primary" onclick="closeModal()">Забрать игрушку →</button>`;
+        document.getElementById('next1').style.display = 'flex';
+        collectToy(toy.id);
+      } else {
+        markFailed(toy.id);
+        showFailure(modal, 'explain1', 'next1',
+          `Правильный ответ — «Ирония судьбы, или С легким паром!» с <strong>${byViews.v.toLocaleString('ru-RU')}</strong> оценками.`);
+      }
+    });
+  });
+}
+
+// --- ВОПРОС 2: Угадай по цифрам ---
+function renderQ2(modal, toy){
+  const target = FILMS.find(f=>f.t==="Морозко");
+  const distractors = [
+    FILMS.find(f=>f.t==="Снежная королева"),
+    FILMS.find(f=>f.t==="Чародеи"),
+    FILMS.find(f=>f.t==="Снегурочка")
+  ];
+  const options = [target, ...distractors].sort(()=>Math.random()-0.5);
+
+  modal.innerHTML = `
+    <div class="modal__toy">${toy.emoji}</div>
+    <div class="modal__header">
+      <div class="modal__tag">Испытание 2 · Угадай по цифрам</div>
+      <div class="modal__title">Улика без имени</div>
+    </div>
+    <p class="modal__desc">На старой карточке стёрлось название. Узнай фильм по «паспортным данным». Ошибёшься — игрушка потеряна.</p>
+    <div class="clue-card">
+      <div class="clue-card__row"><span>Год выхода</span><span>${target.y}</span></div>
+      <div class="clue-card__row"><span>Рейтинг Кинопоиска</span><span>${target.r}</span></div>
+      <div class="clue-card__row"><span>Число оценок</span><span>${target.v.toLocaleString('ru-RU')}</span></div>
+    </div>
+    <div class="options" id="opt2">
+      ${options.map((o,i)=>`
+        <button class="option" data-title="${o.t}">
+          <span class="option__letter">${String.fromCharCode(65+i)}</span>
+          <span>${o.t}</span>
+        </button>
+      `).join('')}
+    </div>
+    <div id="explain2"></div>
+    <div class="modal__next" id="next2" style="display:none"></div>
+  `;
+
+  modal.querySelectorAll('.option').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      const isCorrect = btn.dataset.title === target.t;
+      modal.querySelectorAll('.option').forEach(b=>{
+        b.disabled = true;
+        if(b.dataset.title === target.t) b.classList.add('correct');
+      });
+      if(!isCorrect) btn.classList.add('wrong');
+
+      if(isCorrect){
+        state.score += 15;
+        document.getElementById('explain2').innerHTML = `
+          <div class="explain">
+            <strong>Точно!</strong> Это «Морозко» — сказка Александра Роу. Рейтинг <strong>${target.r}</strong>, почти <strong>${(target.v/1000).toFixed(0)} тысяч</strong> оценок.
+          </div>
+        `;
+        document.getElementById('next2').innerHTML = `<button class="btn btn-primary" onclick="closeModal()">Забрать игрушку →</button>`;
+        document.getElementById('next2').style.display = 'flex';
+        collectToy(toy.id);
+      } else {
+        markFailed(toy.id);
+        showFailure(modal, 'explain2', 'next2',
+          `Это было «Морозко» (${target.y}, рейтинг ${target.r}, ${target.v.toLocaleString('ru-RU')} оценок).`);
+      }
+    });
+  });
+}
+
+// --- ВОПРОС 3: Битва фильмов ---
+function renderQ3(modal, toy){
+  const a = FILMS.find(f=>f.t==="Ёлки");
+  const b = FILMS.find(f=>f.t==="Ёлки 2");
+
+  modal.innerHTML = `
+    <div class="modal__toy">${toy.emoji}</div>
+    <div class="modal__header">
+      <div class="modal__tag">Испытание 3 · Битва фильмов</div>
+      <div class="modal__title">Кого зрители любят больше?</div>
+    </div>
+    <p class="modal__desc">Два фильма. Один вопрос: <strong>у какого из них больше пользовательских оценок</strong>? Ошибёшься — игрушка потеряна.</p>
+    <div class="battle" id="battle3">
+      <div class="battle__card" data-name="${a.t}">
+        <div class="battle__name">${a.t}</div>
+        <div class="battle__year">${a.y}</div>
+      </div>
+      <div class="battle__vs">VS</div>
+      <div class="battle__card" data-name="${b.t}">
+        <div class="battle__name">${b.t}</div>
+        <div class="battle__year">${b.y}</div>
+      </div>
+    </div>
+    <div id="explain3"></div>
+    <div class="modal__next" id="next3" style="display:none"></div>
+  `;
+
+  modal.querySelectorAll('.battle__card').forEach(card=>{
+    card.addEventListener('click',()=>{
+      if(card.classList.contains('correct')||card.classList.contains('wrong')) return;
+      const isCorrect = card.dataset.name === a.t;
+      modal.querySelectorAll('.battle__card').forEach(cd=>{
+        if(cd.dataset.name === a.t) cd.classList.add('correct');
+        else cd.classList.add('wrong');
+      });
+
+      if(isCorrect){
+        state.score += 15;
+        document.getElementById('explain3').innerHTML = `
+          <div class="explain">
+            <strong>Верно!</strong> «Ёлки» (${a.y}) собрали <strong>${a.v.toLocaleString('ru-RU')}</strong> оценок — больше, чем «Ёлки 2» (<strong>${b.v.toLocaleString('ru-RU')}</strong>).
+          </div>
+        `;
+        document.getElementById('next3').innerHTML = `<button class="btn btn-primary" onclick="closeModal()">Забрать игрушку →</button>`;
+        document.getElementById('next3').style.display = 'flex';
+        collectToy(toy.id);
+      } else {
+        markFailed(toy.id);
+        showFailure(modal, 'explain3', 'next3',
+          `Победили «Ёлки» — <strong>${a.v.toLocaleString('ru-RU')}</strong> оценок против <strong>${b.v.toLocaleString('ru-RU')}</strong> у сиквела.`);
+      }
+    });
+  });
+}
+
+// --- ВОПРОС 4: Путешествие во времени ---
+function renderQ4(modal, toy){
+  const films = [
+    FILMS.find(f=>f.t==="Карнавальная ночь"),
+    FILMS.find(f=>f.t==="Морозко"),
+    FILMS.find(f=>f.t==="Чародеи"),
+    FILMS.find(f=>f.t==="Тариф Новогодний")
+  ];
+  const shuffled = [...films].sort(()=>Math.random()-0.5);
+  const correctOrder = [...films].sort((a,b)=>a.y-b.y);
+
+  modal.innerHTML = `
+    <div class="modal__toy">${toy.emoji}</div>
+    <div class="modal__header">
+      <div class="modal__tag">Испытание 4 · Путешествие во времени</div>
+      <div class="modal__title">Расставь по годам</div>
+    </div>
+    <p class="modal__desc">Четыре фильма из разных эпох. Расположи их от самого раннего к самому позднему. Ошибёшься — игрушка потеряна.</p>
+    <div class="timeline" id="timeline4">
+      ${shuffled.map((f,i)=>`
+        <div class="timeline__item" data-title="${f.t}" data-year="${f.y}" draggable="true">
+          <span class="timeline__grip">☰</span>
+          <span class="timeline__name">${f.t}</span>
+          <span class="timeline__year-hidden">? ? ? ?</span>
+        </div>
+      `).join('')}
+    </div>
+    <button class="btn btn-ghost" id="check4" onclick="checkTimelineInModal()">Проверить порядок</button>
+    <div id="explain4"></div>
+    <div class="modal__next" id="next4" style="display:none"></div>
+  `;
+
+  const tl = document.getElementById('timeline4');
+  let dragged = null;
+  tl.querySelectorAll('.timeline__item').forEach(item=>{
+    item.addEventListener('dragstart',()=>{dragged=item;item.classList.add('dragging');});
+    item.addEventListener('dragend',()=>{item.classList.remove('dragging');dragged=null;});
+    item.addEventListener('dragover',e=>{
+      e.preventDefault();
+      if(dragged && dragged!==item){
+        const rect = item.getBoundingClientRect();
+        const next = (e.clientY - rect.top) > rect.height/2;
+        tl.insertBefore(dragged, next ? item.nextSibling : item);
+      }
+    });
+    const up = document.createElement('span');
+    up.textContent = '▲';
+    up.style.cssText = 'cursor:pointer;color:var(--gold);padding:0 6px;font-size:14px';
+    up.onclick = ()=>{if(item.previousElementSibling) tl.insertBefore(item, item.previousElementSibling);};
+    const down = document.createElement('span');
+    down.textContent = '▼';
+    down.style.cssText = 'cursor:pointer;color:var(--gold);padding:0 6px;font-size:14px';
+    down.onclick = ()=>{if(item.nextElementSibling) tl.insertBefore(item.nextElementSibling, item);};
+    item.appendChild(up);
+    item.appendChild(down);
+  });
+
+  window.checkTimelineInModal = ()=>{
+    const items = document.querySelectorAll('#timeline4 .timeline__item');
+    const years = Array.from(items).map(i=>parseInt(i.dataset.year));
+    const sorted = [...years].sort((a,b)=>a-b);
+    const isCorrect = JSON.stringify(years) === JSON.stringify(sorted);
+
+    items.forEach((item,i)=>{
+      item.draggable = false;
+      item.querySelectorAll('span').forEach(s=>{if(s.textContent==='▲'||s.textContent==='▼')s.remove();});
+      const yearSpan = item.querySelector('.timeline__year-hidden');
+      if(yearSpan){yearSpan.textContent = item.dataset.year;yearSpan.style.color='var(--gold-bright)';}
+      if(parseInt(item.dataset.year) === sorted[i]) item.classList.add('correct-pos');
+      else item.classList.add('wrong-pos');
+    });
+
+    const list = sorted.map(y=>{
+      const f = FILMS.find(x=>x.y===y && ['Карнавальная ночь','Морозко','Чародеи','Тариф Новогодний'].includes(x.t));
+      return f ? `«${f.t}» (${y})` : y;
+    }).join(' → ');
+
+    if(isCorrect){
+      state.score += 20;
+      document.getElementById('explain4').innerHTML = `
+        <div class="explain">
+          <strong>Превосходно!</strong> Хронология верна: ${list}.
+        </div>
+      `;
+      document.getElementById('next4').innerHTML = `<button class="btn btn-primary" onclick="closeModal()">Забрать игрушку →</button>`;
+      document.getElementById('next4').style.display = 'flex';
+      collectToy(toy.id);
+    } else {
+      markFailed(toy.id);
+      document.getElementById('explain4').innerHTML = `
+        <div class="explain fail">
+          <strong>Порядок нарушен.</strong> Правильно: ${list}. Игрушка остаётся у вора.
+        </div>
+      `;
+      document.getElementById('next4').innerHTML = `<button class="btn btn-ghost" onclick="closeModal()">Понятно</button>`;
+      document.getElementById('next4').style.display = 'flex';
+    }
+    document.getElementById('check4').disabled = true;
+    document.getElementById('check4').style.opacity = .5;
+  };
+}
+
+// --- ВОПРОС 5: Забытые сокровища ---
+function renderQ5(modal, toy){
+  const a = FILMS.find(f=>f.t==="Снегурочку вызывали?");
+  const b = FILMS.find(f=>f.t==="Юбилей");
+  const cc = FILMS.find(f=>f.t==="Странное Рождество");
+
+  modal.innerHTML = `
+    <div class="modal__toy">${toy.emoji}</div>
+    <div class="modal__header">
+      <div class="modal__tag">Испытание 5 · Забытые сокровища</div>
+      <div class="modal__title">Малоизвестный ≠ плохой</div>
+    </div>
+    <p class="modal__desc">Эти фильмы редко мелькают в топах. У какого из трёх <strong>больше всего пользовательских оценок</strong>? Ошибёшься — игрушка потеряна.</p>
+    <div class="options" id="opt5">
+      ${[a,b,cc].map((o,i)=>`
+        <button class="option" data-title="${o.t}">
+          <span class="option__letter">${String.fromCharCode(65+i)}</span>
+          <span>${o.t}</span>
+        </button>
+      `).join('')}
+    </div>
+    <div id="explain5"></div>
+    <div class="modal__next" id="next5" style="display:none"></div>
+  `;
+
+  modal.querySelectorAll('.option').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      const isCorrect = btn.dataset.title === a.t;
+      modal.querySelectorAll('.option').forEach(b=>{
+        b.disabled = true;
+        if(b.dataset.title === a.t) b.classList.add('correct');
+      });
+      if(!isCorrect) btn.classList.add('wrong');
+
+      if(isCorrect){
+        state.score += 15;
+        document.getElementById('explain5').innerHTML = `
+          <div class="explain">
+            <strong>Точно!</strong> «Снегурочку вызывали?» собрали <strong>${a.v.toLocaleString('ru-RU')}</strong> оценок.
+          </div>
+        `;
+        document.getElementById('next5').innerHTML = `<button class="btn btn-primary" onclick="closeModal()">Забрать игрушку →</button>`;
+        document.getElementById('next5').style.display = 'flex';
+        collectToy(toy.id);
+      } else {
+        markFailed(toy.id);
+        showFailure(modal, 'explain5', 'next5',
+          `Лидер — «Снегурочку вызывали?» с <strong>${a.v.toLocaleString('ru-RU')}</strong> оценками.`);
+      }
+    });
+  });
+}
+
+// --- ВОПРОС 6: Последняя улика ---
+function renderQ6(modal, toy){
+  const target = FILMS.find(f=>f.t==="Приходи на меня посмотреть");
+  const d1 = FILMS.find(f=>f.t==="Сирота казанская");
+  const d2 = FILMS.find(f=>f.t==="Бедная Саша");
+  const d3 = FILMS.find(f=>f.t==="Президент и его внучка");
+  const options = [target,d1,d2,d3].sort(()=>Math.random()-0.5);
+
+  modal.innerHTML = `
+    <div class="modal__toy">${toy.emoji}</div>
+    <div class="modal__header">
+      <div class="modal__tag">Испытание 6 · Последняя улика</div>
+      <div class="modal__title">Собери портрет</div>
+    </div>
+    <p class="modal__desc">Последний шаг. Перед тобой — досье таинственного фильма. Соедини все показатели. Ошибёшься — игрушка потеряна.</p>
+    <div class="clue-card">
+      <div class="clue-card__row"><span>Год выхода</span><span>${target.y}</span></div>
+      <div class="clue-card__row"><span>Рейтинг</span><span>${target.r}</span></div>
+      <div class="clue-card__row"><span>Число оценок</span><span>${target.v.toLocaleString('ru-RU')}</span></div>
+      <div class="clue-card__row"><span>Страна</span><span>Россия</span></div>
+      <div class="clue-card__row"><span>Жанр</span><span>мелодрама</span></div>
+    </div>
+    <div class="options" id="opt6">
+      ${options.map((o,i)=>`
+        <button class="option" data-title="${o.t}">
+          <span class="option__letter">${String.fromCharCode(65+i)}</span>
+          <span>${o.t}</span>
+        </button>
+      `).join('')}
+    </div>
+    <div id="explain6"></div>
+    <div class="modal__next" id="next6" style="display:none"></div>
+  `;
+
+  modal.querySelectorAll('.option').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      const isCorrect = btn.dataset.title === target.t;
+      modal.querySelectorAll('.option').forEach(b=>{
+        b.disabled = true;
+        if(b.dataset.title === target.t) b.classList.add('correct');
+      });
+      if(!isCorrect) btn.classList.add('wrong');
+
+      if(isCorrect){
+        state.score += 25;
+        document.getElementById('explain6').innerHTML = `
+          <div class="explain">
+            <strong>Дело раскрыто!</strong> Это «Приходи на меня смотреть» — мелодрама с Янковским и Купченко.
+          </div>
+        `;
+        document.getElementById('next6').innerHTML = `<button class="btn btn-primary" onclick="closeModal()">Забрать игрушку →</button>`;
+        document.getElementById('next6').style.display = 'flex';
+        collectToy(toy.id);
+      } else {
+        markFailed(toy.id);
+        showFailure(modal, 'explain6', 'next6',
+          `Это было «Приходи на меня смотреть» (${target.y}, рейтинг ${target.r}, ${target.v.toLocaleString('ru-RU')} оценок).`);
+      }
+    });
+  });
+}
+
+/* =========================================================
+   ФИНАЛ: Дед Мороз анализирует КОМБИНАЦИЮ игрушек
+   ========================================================= */
+function finishGame(){
+  if(gameLoopId) cancelAnimationFrame(gameLoopId);
+  go('final');
+  renderFinal();
+}
+
+function renderFinal(){
+  const collected = state.collected;
+  const failed = state.failed;
+  const collectedCount = collected.filter(c=>c).length;
+  const failedCount = failed.filter(c=>c).length;
+  
+  const hasForgotten = collected[4] || collected[5];
+  const hasOnlyForgotten = (collected[4] || collected[5]) && !collected[0] && !collected[1] && !collected[2] && !collected[3];
+  const hasAllHits = collected[0] && collected[1] && collected[2] && collected[3];
+  
+  let result;
+  
+  if(collectedCount === 6){
+    result = {
+      icon:"🎬",
+      rank:"Главный спаситель Нового года",
+      tag:"Детектив высшего класса",
+      text:"Дед Мороз хлопает в ладоши: «Все шесть игрушек! Ты разгадал каждую загаду — от статистики до забытых фильмов. Праздник спасён, ёлки снова горят!» Ты знаешь новогоднее кино наизусть — и хиты, и сокровища в тени."
+    };
+  } else if(collectedCount >= 4 && hasAllHits && hasForgotten){
+    result = {
+      icon:"🎞️",
+      rank:"Детектив новогодних хитов",
+      tag:"Знаток популярного кино",
+      text:"Дед Мороз улыбается: «Хорошая работа! Ты знаешь и главные хиты, и редкие фильмы — редкое сочетание». Ты смотришь статистику как профи и не боишься копнуть глубже."
+    };
+  } else if(collectedCount >= 4 && hasAllHits){
+    result = {
+      icon:"🎄",
+      rank:"Хранитель советской классики",
+      tag:"Ценитель главного",
+      text:"Дед Мороз кивает: «Ты собрал все главные хиты — «Ирония судьбы», «Морозко», «Ёлки» для тебя не просто названия». Но редкие фильмы пока остаются в тени."
+    };
+  } else if(hasOnlyForgotten || (collectedCount >= 2 && hasForgotten && !hasAllHits)){
+    result = {
+      icon:"🔍",
+      rank:"Охотник за забытыми фильмами",
+      tag:"Исследователь глубины",
+      text:"Дед Мороз хитро прищуривается: «Ты замечаешь то, что другие пропускают. Пока все смотрят одни и те же десять фильмов, ты знаешь — на Кинопоиске есть ещё сотни тёплых историй»."
+    };
+  } else if(collectedCount >= 2){
+    result = {
+      icon:"🎁",
+      rank:"Ученик детектива",
+      tag:"На верном пути",
+      text:"Дед Мороз хлопает по плечу: «Неплохо для начала. Ты собрал несколько игрушек — праздник уже теплее, но до полного спасения ещё далеко». Попробуй ещё раз — в следующий раз получится больше."
+    };
+  } else if(collectedCount === 1){
+    result = {
+      icon:"❄️",
+      rank:"Новогодний новичок",
+      tag:"Детектив-стажёр",
+      text:"Дед Мороз вздыхает: «Одна игрушка — это уже лучше, чем ничего. Праздник почти не спасён, но ты в пути». В следующий раз присмотрись к цифрам и названиям — они подскажут."
+    };
+  } else {
+    result = {
+      icon:"🌨️",
+      rank:"Праздник отменяется",
+      tag:"Детектив без удачи",
+      text:"Дед Мороз качает головой: «Ни одной игрушки... Ёлки так и не загорятся в этом году. Но не отчаивайся — попробуй ещё раз, и праздник обязательно вернётся»."
+    };
+  }
+
+  const fc = document.getElementById('final-container');
+  fc.innerHTML = `
+    <div class="final__badge">Дело № 12-31 · Закрыто</div>
+    <h1 class="final__title">Дед Мороз говорит:<br>ты — <em>${result.rank}</em></h1>
+    <p class="final__desc">${result.text}</p>
+
+    <div class="result-card" id="resultCard">
+      <div class="result-card__header">
+        <div class="result-card__icon">${result.icon}</div>
+        <div>
+          <div class="result-card__rank">
+            ${result.rank}
+            <small>${result.tag}</small>
+          </div>
+        </div>
+      </div>
+      <div class="result-card__text">«Кто украл твой Новый год?». Детектив прошёл по фабрике Деда Мороза и принёс ему то, что смог собрать.</div>
+      <div class="result-card__toys">
+        ${TOYS.map((toy,i)=>{
+          if(collected[i]) return `<div class="result-card__toy" title="${toy.name} — собрано">${toy.emoji}</div>`;
+          if(failed[i]) return `<div class="result-card__toy lost" title="${toy.name} — потеряно"></div>`;
+          return `<div class="result-card__toy lost" title="${toy.name} — не найдено"></div>`;
+        }).join('')}
+      </div>
+      <div class="result-card__stats">
+        <div class="result-card__stat">
+          <div class="result-card__stat-num">${collectedCount}</div>
+          <div class="result-card__stat-label">игрушек собрано</div>
+        </div>
+        <div class="result-card__stat">
+          <div class="result-card__stat-num">${failedCount}</div>
+          <div class="result-card__stat-label">игрушек потеряно</div>
+        </div>
+      </div>
+      <div class="result-card__footer">kinopoisk.ru · 2026</div>
+    </div>
+
+    <div class="final__actions">
+      <button class="btn btn-primary" onclick="shareResult()">📤 Поделиться результатом</button>
+      <button class="btn btn-ghost" onclick="restart()">↻ Пройти ещё раз</button>
+    </div>
+  `;
+}
+
+function shareResult(){
+  const rankEl = document.querySelector('.result-card__rank');
+  const rank = rankEl ? rankEl.childNodes[0].textContent.trim() : '';
+  const collectedCount = state.collected.filter(c=>c).length;
+  const failedCount = state.failed.filter(c=>c).length;
+  const toys = TOYS.map((t,i)=>state.collected[i]?t.emoji:'').filter(Boolean).join(' ');
+  const text = `🎄 Мой результат в игре «Кто украл твой Новый год?»\n\n${rank}\n🎁 Собрано игрушек: ${collectedCount}/6\n💔 Потеряно: ${failedCount}/6\n${toys ? '🏆 Мой набор: '+toys : ''}\n\nА ты сможешь спасти праздник?`;
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(text).then(()=>showToast('Текст скопирован ✨')).catch(()=>fallbackCopy(text));
+  } else fallbackCopy(text);
+}
+function fallbackCopy(text){
+  const ta = document.createElement('textarea');
+  ta.value = text;ta.style.position='fixed';ta.style.opacity='0';
+  document.body.appendChild(ta);ta.select();
+  try{document.execCommand('copy');showToast('Текст скопирован ✨');}
+  catch(e){showToast('Не удалось скопировать');}
+  document.body.removeChild(ta);
+}
+function restart(){
+  state = {score:0,collected:[false,false,false,false,false,false],failed:[false,false,false,false,false,false]};
+  go('start');
+}
+
+/* =========================================================
+   TOAST
+   ========================================================= */
+function showToast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2500);
+}
+
+/* =========================================================
+   СНЕЖИНКИ
+   ========================================================= */
+function initSnow(){
+  const snow = document.getElementById('snow');
+  const flakes = ['❄','❅','❆','✦','✧'];
+  for(let i=0;i<28;i++){
+    const s = document.createElement('span');
+    s.textContent = flakes[Math.floor(Math.random()*flakes.length)];
+    s.style.left = Math.random()*100 + '%';
+    s.style.fontSize = (8 + Math.random()*14) + 'px';
+    s.style.opacity = 0.2 + Math.random()*0.5;
+    s.style.animationDuration = (8 + Math.random()*14) + 's';
+    s.style.animationDelay = (Math.random()*10) + 's';
+    snow.appendChild(s);
+  }
+}
+initSnow();
+</script>
+
+</body>
+</html>
